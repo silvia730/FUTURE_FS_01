@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+  /* MUCH LARGER base font sizes for mobile readability */
+  html {
+    font-size: 18px;
+    /* Increased from 16px - base size for mobile */
+  }
+
+  @media (min-width: 768px) {
+    html {
+      font-size: 16px;
+      /* Standard size on tablet+ */
+    }
+  }
+
+  body {
+    @apply bg-navy text-slate font-sans antialiased;
+    overflow-x: hidden;
+    line-height: 1.8;
+    /* Even better line height for readability */
+  }
+
+  /* Much larger responsive heading sizes for mobile */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold text-lightest-slate;
+    line-height: 1.3;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-3xl lg:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-2xl;
+  }
+
+  h4 {
+    @apply text-xl md:text-xl;
+  }
+
+  p {
+    @apply text-lg md:text-base;
+    line-height: 1.8;
+  }
+
+  ::selection {
+    @apply bg-teal text-navy;
+  }
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+  }
+
+  /* Mobile-friendly spacing utilities */
+  .mobile-px {
+    @apply px-4 md:px-8;
+  }
+
+  .mobile-py {
+    @apply py-12 md:py-24;
+  }
+}

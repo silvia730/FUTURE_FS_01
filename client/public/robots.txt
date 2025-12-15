@@ -1,0 +1,10 @@
+# Allow all search engines to crawl everything
+User-agent: *
+Allow: /
+
+# Sitemap location (update URL after deployment)
+Sitemap: https://your-portfolio-url.vercel.app/sitemap.xml
+
+# Disallow admin routes (if keeping in production)
+User-agent: *
+Disallow: /admin
