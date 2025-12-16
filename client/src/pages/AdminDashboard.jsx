@@ -57,8 +57,8 @@ const AdminDashboard = () => {
                 <button
                     onClick={() => setActiveTab('contacts')}
                     className={`px-6 py-3 rounded-lg font-mono transition-colors ${activeTab === 'contacts'
-                            ? 'bg-teal text-navy'
-                            : 'bg-light-navy text-slate hover:text-teal'
+                        ? 'bg-teal text-navy'
+                        : 'bg-light-navy text-slate hover:text-teal'
                         }`}
                 >
                     Contact Messages ({contacts.length})
@@ -66,8 +66,8 @@ const AdminDashboard = () => {
                 <button
                     onClick={() => setActiveTab('connection')}
                     className={`px-6 py-3 rounded-lg font-mono transition-colors ${activeTab === 'connection'
-                            ? 'bg-teal text-navy'
-                            : 'bg-light-navy text-slate hover:text-teal'
+                        ? 'bg-teal text-navy'
+                        : 'bg-light-navy text-slate hover:text-teal'
                         }`}
                 >
                     Connection Test
@@ -115,8 +115,8 @@ const AdminDashboard = () => {
                                         </div>
                                         <div className="text-right">
                                             <span className={`inline-block px-3 py-1 rounded text-xs font-mono ${contact.status === 'new'
-                                                    ? 'bg-green-500/20 text-green-400'
-                                                    : 'bg-slate/20 text-slate'
+                                                ? 'bg-green-500/20 text-green-400'
+                                                : 'bg-slate/20 text-slate'
                                                 }`}>
                                                 {contact.status}
                                             </span>
@@ -140,8 +140,8 @@ const AdminDashboard = () => {
             {activeTab === 'connection' && (
                 <div>
                     <div className={`p-6 rounded-lg mb-8 ${connectionStatus.includes('✅') ? 'bg-green-500/10 border border-green-500' :
-                            connectionStatus.includes('❌') ? 'bg-red-500/10 border border-red-500' :
-                                'bg-yellow-500/10 border border-yellow-500'
+                        connectionStatus.includes('❌') ? 'bg-red-500/10 border border-red-500' :
+                            'bg-yellow-500/10 border border-yellow-500'
                         }`}>
                         <h2 className="text-2xl font-bold text-white mb-2">{connectionStatus}</h2>
                         {error && <p className="text-red-400 font-mono text-sm">Error: {error}</p>}
@@ -151,8 +151,8 @@ const AdminDashboard = () => {
                         <h3 className="text-xl font-bold text-teal mb-4">Connection Details</h3>
                         <ul className="text-slate space-y-2 font-mono text-sm">
                             <li><span className="text-teal">Frontend:</span> http://localhost:5173</li>
-                            <li><span className="text-teal">Backend:</span> http://localhost:5000</li>
-                            <li><span className="text-teal">API Endpoint:</span> http://localhost:5000/api</li>
+                            <li><span className="text-teal">Backend:</span> {import.meta.env.VITE_API_URL || 'http://localhost:5000'}</li>
+                            <li><span className="text-teal">API Endpoint:</span> {import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api</li>
                             <li><span className="text-teal">MongoDB:</span> {connectionStatus.includes('✅') ? 'Connected' : 'Unknown'}</li>
                         </ul>
                     </div>
