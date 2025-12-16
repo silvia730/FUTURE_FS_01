@@ -150,7 +150,7 @@ const AdminDashboard = () => {
                     <div className="bg-light-navy p-6 rounded-lg mb-8">
                         <h3 className="text-xl font-bold text-teal mb-4">Connection Details</h3>
                         <ul className="text-slate space-y-2 font-mono text-sm">
-                            <li><span className="text-teal">Frontend:</span> http://localhost:5173</li>
+                            <li><span className="text-teal">Frontend:</span> {window.location.origin}</li>
                             <li><span className="text-teal">Backend:</span> {import.meta.env.VITE_API_URL || 'http://localhost:5000'}</li>
                             <li><span className="text-teal">API Endpoint:</span> {import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api</li>
                             <li><span className="text-teal">MongoDB:</span> {connectionStatus.includes('✅') ? 'Connected' : 'Unknown'}</li>
