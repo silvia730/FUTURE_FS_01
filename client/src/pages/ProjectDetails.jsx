@@ -2,11 +2,18 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
+import SEO from '../components/SEO';
+
 const ProjectDetails = () => {
     const { id } = useParams();
 
     return (
         <div className="pt-32 px-8 max-w-4xl mx-auto min-h-screen">
+            <SEO
+                title={`Project: ${id}`}
+                description={`Detailed case study for the ${id} project.`}
+                url={`/projects/${id}`}
+            />
             <Link to="/" className="text-teal font-mono text-sm flex items-center hover:underline mb-8">
                 <ArrowLeft size={16} className="mr-2" /> Back to Home
             </Link>

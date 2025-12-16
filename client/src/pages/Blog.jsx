@@ -1,5 +1,7 @@
 import React from 'react';
 
+import SEO from '../components/SEO';
+
 const Blog = () => {
     const posts = [
         { title: "Why I Chose MERN for Scalable Applications", date: "Oct 12, 2025", tags: ["Architecture", "MERN"] },
@@ -9,6 +11,11 @@ const Blog = () => {
 
     return (
         <div className="pt-32 px-8 max-w-4xl mx-auto min-h-screen">
+            <SEO
+                title="Technical Writing"
+                description="Technical articles and insights on Full Stack Development, AWS, and Software Engineering."
+                url="/blog"
+            />
             <h1 className="text-4xl font-bold text-lightest-slate mb-12">Technical Writing</h1>
             <div className="space-y-8">
                 {posts.map((post, i) => (

@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location (update URL after deployment)
-Sitemap: https://your-portfolio-url.vercel.app/sitemap.xml
+Sitemap: https://future-fs-01-one-alpha.vercel.app/sitemap.xml
 
 # Disallow admin routes (if keeping in production)
 User-agent: *

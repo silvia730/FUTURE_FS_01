@@ -8,9 +8,16 @@ import Blog from '../components/Blog';
 import FeaturedProjects from '../components/FeaturedProjects';
 import Contact from '../components/Contact';
 
+import SEO from '../components/SEO';
+
 const Home = () => {
     return (
         <div className="flex flex-col w-full">
+            <SEO
+                title="Home"
+                description="Portfolio of Silvia Njeri, a Full Stack Developer specializing in MERN stack and AWS cloud solutions."
+                keywords="Full Stack Developer, MERN, AWS, React, Node.js, Portfolio"
+            />
             <Hero />
             <ThinkingManifesto />
             <TechnicalDepth />
