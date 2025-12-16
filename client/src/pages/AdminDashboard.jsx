@@ -2,17 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { projectsAPI, contactAPI } from '../services/api';
 
 const AdminDashboard = () => {
+    // Auth State
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [password, setPassword] = useState('');
+    const [authError, setAuthError] = useState('');
+
+    // Dashboard State
     const [projects, setProjects] = useState([]);
     const [contacts, setContacts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState(null);
     const [connectionStatus, setConnectionStatus] = useState('Testing...');
     const [activeTab, setActiveTab] = useState('contacts');
 
     useEffect(() => {
-        testConnection();
-        fetchContacts();
-    }, []);
+        if (isAuthenticated) {
+            testConnection();
+            fetchContacts();
+        }
+    }, [isAuthenticated]);
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        // Simple hardcoded password for now - acceptable for this specific user request
+        if (password === 'admin123') {
+            setIsAuthenticated(true);
+            setAuthError('');
+        } else {
+            setAuthError('Invalid password');
+        }
+    };
 
     const testConnection = async () => {
         try {
@@ -34,10 +54,27 @@ const AdminDashboard = () => {
 
     const fetchContacts = async () => {
         try {
+            setRefreshing(true);
             const data = await contactAPI.getAll();
             setContacts(data);
         } catch (err) {
             console.error('Error fetching contacts:', err);
+            setError('Failed to fetch contacts');
+        } finally {
+            setRefreshing(false);
+        }
+    };
+
+    const handleDeleteContact = async (id) => {
+        if (window.confirm('Are you sure you want to delete this message?')) {
+            try {
+                await contactAPI.delete(id);
+                // Remove from local state immediately
+                setContacts(contacts.filter(c => c._id !== id));
+            } catch (err) {
+                console.error('Error deleting contact:', err);
+                alert('Failed to delete message');
+            }
         }
     };
 
@@ -48,9 +85,46 @@ const AdminDashboard = () => {
         });
     };
 
+    if (!isAuthenticated) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-navy px-4">
+                <div className="bg-light-navy p-8 rounded-lg border border-teal/20 w-full max-w-md">
+                    <h2 className="text-2xl font-bold text-lightest-slate mb-6 text-center">Admin Access</h2>
+                    <form onSubmit={handleLogin}>
+                        <div className="mb-4">
+                            <label className="block text-slate mb-2 text-sm font-mono">Password</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full bg-navy border border-slate/30 rounded px-4 py-2 text-lightest-slate focus:border-teal outline-none transition-colors"
+                                placeholder="Enter admin password"
+                            />
+                        </div>
+                        {authError && <p className="text-red-400 text-sm mb-4">{authError}</p>}
+                        <button
+                            type="submit"
+                            className="w-full bg-teal/10 text-teal border border-teal py-2 rounded hover:bg-teal/20 transition-colors font-mono"
+                        >
+                            Login
+                        </button>
+                    </form>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen pt-32 px-8 max-w-6xl mx-auto">
-            <h1 className="text-4xl font-bold text-lightest-slate mb-8">Admin Dashboard</h1>
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-4xl font-bold text-lightest-slate">Admin Dashboard</h1>
+                <button
+                    onClick={() => setIsAuthenticated(false)}
+                    className="text-slate hover:text-red-400 text-sm font-mono"
+                >
+                    Logout
+                </button>
+            </div>
 
             {/* Tabs */}
             <div className="flex gap-4 mb-8">
@@ -83,9 +157,16 @@ const AdminDashboard = () => {
                         </h2>
                         <button
                             onClick={fetchContacts}
-                            className="border border-teal text-teal py-2 px-4 rounded text-sm font-mono hover:bg-teal/10 transition-colors"
+                            disabled={refreshing}
+                            className="border border-teal text-teal py-2 px-4 rounded text-sm font-mono hover:bg-teal/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
-                            Refresh
+                            {refreshing ? (
+                                <>
+                                    <span className="animate-spin">↻</span> Refreshing...
+                                </>
+                            ) : (
+                                'Refresh'
+                            )}
                         </button>
                     </div>
 
@@ -101,7 +182,7 @@ const AdminDashboard = () => {
                             {contacts.map((contact) => (
                                 <div
                                     key={contact._id}
-                                    className="bg-light-navy p-6 rounded-lg border border-slate/20 hover:border-teal/30 transition-colors"
+                                    className="bg-light-navy p-6 rounded-lg border border-slate/20 hover:border-teal/30 transition-colors group"
                                 >
                                     <div className="flex justify-between items-start mb-4">
                                         <div>
@@ -113,16 +194,16 @@ const AdminDashboard = () => {
                                                 {contact.email}
                                             </a>
                                         </div>
-                                        <div className="text-right">
-                                            <span className={`inline-block px-3 py-1 rounded text-xs font-mono ${contact.status === 'new'
-                                                ? 'bg-green-500/20 text-green-400'
-                                                : 'bg-slate/20 text-slate'
-                                                }`}>
-                                                {contact.status}
-                                            </span>
-                                            <p className="text-slate text-xs mt-2 font-mono">
+                                        <div className="text-right flex flex-col items-end gap-2">
+                                            <span className={`inline-block px-3 py-1 rounded text-xs font-mono bg-slate/20 text-slate`}>
                                                 {formatDate(contact.createdAt)}
-                                            </p>
+                                            </span>
+                                            <button
+                                                onClick={() => handleDeleteContact(contact._id)}
+                                                className="text-red-400 text-xs font-mono hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                [Delete Message]
+                                            </button>
                                         </div>
                                     </div>
 
@@ -151,8 +232,7 @@ const AdminDashboard = () => {
                         <h3 className="text-xl font-bold text-teal mb-4">Connection Details</h3>
                         <ul className="text-slate space-y-2 font-mono text-sm">
                             <li><span className="text-teal">Frontend:</span> {window.location.origin}</li>
-                            <li><span className="text-teal">Backend:</span> {import.meta.env.VITE_API_URL || 'http://localhost:5000'}</li>
-                            <li><span className="text-teal">API Endpoint:</span> {import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api</li>
+                            <li><span className="text-teal">Backend:</span> {import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}</li>
                             <li><span className="text-teal">MongoDB:</span> {connectionStatus.includes('✅') ? 'Connected' : 'Unknown'}</li>
                         </ul>
                     </div>

@@ -32,6 +32,10 @@ export const contactAPI = {
         const response = await api.get('/contact');
         return response.data;
     },
+    delete: async (id) => {
+        const response = await api.delete(`/contact/${id}`);
+        return response.data;
+    },
 };
 
 export default api;

@@ -56,8 +56,28 @@ const getContactMessages = async (req, res) => {
     }
 };
 
+// @desc    Delete contact message
+// @route   DELETE /api/contact/:id
+// @access  Public (should be protected in production)
+const deleteContactMessage = async (req, res) => {
+    try {
+        const contact = await Contact.findById(req.params.id);
+
+        if (contact) {
+            await contact.deleteOne();
+            res.json({ message: 'Message removed' });
+        } else {
+            res.status(404).json({ message: 'Message not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting contact:', error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
 module.exports = {
     sendContactEmail,
-    getContactMessages
+    getContactMessages,
+    deleteContactMessage
 };
 
